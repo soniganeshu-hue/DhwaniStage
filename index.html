@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DhwaniStage — Community Event Sound, Speaker & DJ Equipment Rental System</title>
+  
+  <!-- Google Fonts: Yatra One (Festive Devanagari/Latin Display) & Poppins (Modern Accessible Body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Yatra+One&display=swap" rel="stylesheet">
+  
+  <!-- External Stylesheet as strictly required -->
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- External JavaScript loaded with defer as strictly required -->
+  <script src="app.js" defer></script>
+</head>
+<body>
+
+  <!-- ==========================================
+       ACCESSIBLE TOAST NOTIFICATION CONTAINER
+       Announces changes to screen readers via aria-live
+       ========================================== -->
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- ==========================================
+       HEADER & FESTIVE INDIAN MAXIMALIST BANNER
+       ========================================== -->
+  <header class="site-header">
+    <!-- Top Geometric Folk Border Strip -->
+    <div class="toran-border" aria-hidden="true"></div>
+    
+    <div class="header-inner container">
+      <!-- Logo Branding & Animated Soundwave -->
+      <div class="brand-wrapper">
+        <div class="soundwave-icon" aria-hidden="true" title="Dhwani Soundwave">
+          <span class="bar bar-1"></span>
+          <span class="bar bar-2"></span>
+          <span class="bar bar-3"></span>
+          <span class="bar bar-4"></span>
+          <span class="bar bar-5"></span>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-title">DhwaniStage</h1>
+          <p class="brand-tagline">ध्वनि स्टेज • Community Event Sound, Speaker &amp; DJ Rental System</p>
+        </div>
+      </div>
+
+      <!-- Header Rig Summary Counter -->
+      <div class="header-rig-badge">
+        <span class="badge-label">Active Rig:</span>
+        <strong id="header-rig-count" class="badge-count">0 Items</strong>
+        <span class="badge-divider">|</span>
+        <span class="badge-deposit">Deposit: ₹<span id="header-deposit-total">0</span></span>
+      </div>
+    </div>
+
+    <!-- Navigation Bar for View Switching -->
+    <nav class="main-nav" aria-label="Main Navigation">
+      <div class="nav-container container">
+        <button type="button" class="nav-btn active" data-view="catalog-view" aria-current="page">
+          <span class="nav-icon">📢</span> 1. Gear Catalog &amp; Rig
+        </button>
+        <button type="button" class="nav-btn" data-view="calculator-view">
+          <span class="nav-icon">🎛️</span> 2. Rate &amp; Deposit Calculator
+        </button>
+        <button type="button" class="nav-btn" data-view="booking-view">
+          <span class="nav-icon">📝</span> 3. Reserve Equipment
+        </button>
+        <button type="button" class="nav-btn" data-view="dashboard-view">
+          <span class="nav-icon">📊</span> 4. Active Bookings (<span id="nav-bookings-count">0</span>)
+        </button>
+        <button type="button" class="nav-btn" data-view="return-view">
+          <span class="nav-icon">🔍</span> 5. Return &amp; Deposit Settlement
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ==========================================
+       MAIN CONTENT CONTAINER
+       ========================================== -->
+  <main class="main-content container">
+
+    <!-- ========================================================
+         VIEW 1: SOUND EQUIPMENT RENTAL CATALOG & RIG BUILDER
+         ======================================================== -->
+    <section id="catalog-view" class="app-view active-view" aria-labelledby="catalog-heading">
+      
+      <div class="section-header-banner">
+        <div>
+          <span class="stamp-tag">Utsav Ready</span>
+          <h2 id="catalog-heading" class="section-title">Sound Equipment Rental Catalog</h2>
+          <p class="section-desc">Handpicked pro sound rigs for Mandali bhajan sandhyas, weddings, college fests, DJ nights, and pandal celebrations.</p>
+        </div>
+        <!-- Quick Action to View Rig -->
+        <button type="button" class="btn btn-secondary jump-to-calc-btn" id="btn-jump-calc">
+          View Selected Rig (<span class="rig-total-items-badge">0</span>) &rarr;
+        </button>
+      </div>
+
+      <!-- Catalog Controls: Search and Category Tabs -->
+      <div class="catalog-controls-card">
+        <!-- Live Search Input -->
+        <div class="search-box">
+          <label for="gear-search-input" class="search-label">Search Gear by Name, Wattage, or Specs:</label>
+          <div class="search-input-wrapper">
+            <span class="search-prefix-icon" aria-hidden="true">🔎</span>
+            <input 
+              type="search" 
+              id="gear-search-input" 
+              class="form-control search-input" 
+              placeholder="e.g., 1200W, Shure, Cordless, 12-Channel, JBL, Par Light..." 
+              autocomplete="off"
+            >
+            <button type="button" id="btn-clear-search" class="btn-clear-search" title="Clear Search">✕</button>
+          </div>
+        </div>
+
+        <!-- Category Filter Tabs -->
+        <div class="category-tabs" role="tablist" aria-label="Gear Categories">
+          <button type="button" class="category-tab active" data-category="all" role="tab" aria-selected="true">
+            All Sound Gear (<span id="cat-count-all">0</span>)
+          </button>
+          <button type="button" class="category-tab" data-category="speakers" role="tab" aria-selected="false">
+            🔊 PA Speaker Sets (<span id="cat-count-speakers">0</span>)
+          </button>
+          <button type="button" class="category-tab" data-category="mics" role="tab" aria-selected="false">
+            🎙️ Wireless Cordless Mics (<span id="cat-count-mics">0</span>)
+          </button>
+          <button type="button" class="category-tab" data-category="mixers" role="tab" aria-selected="false">
+            🎚️ DJ Audio Mixers (<span id="cat-count-mixers">0</span>)
+          </button>
+          <button type="button" class="category-tab" data-category="lights" role="tab" aria-selected="false">
+            💡 Stage Spotlights (<span id="cat-count-lights">0</span>)
+          </button>
+          <button type="button" class="category-tab" data-category="cables" role="tab" aria-selected="false">
+            🔌 Cables &amp; Snakes (<span id="cat-count-cables">0</span>)
+          </button>
+        </div>
+      </div>
+
+      <!-- Equipment Catalog Grid (Rendered dynamically by JavaScript) -->
+      <div id="equipment-grid" class="equipment-grid" aria-live="polite">
+        <!-- Equipment cards will be inserted here by app.js -->
+      </div>
+
+      <!-- Empty state when no gear matches search -->
+      <div id="catalog-empty-state" class="empty-state hidden">
+        <p class="empty-icon">📭</p>
+        <h3>No matching sound equipment found</h3>
+        <p>Try clearing your search query or selecting a different category filter tab.</p>
+        <button type="button" id="btn-reset-filters" class="btn btn-primary">Reset All Filters</button>
+      </div>
+
+    </section>
+
+    <!-- ========================================================
+         VIEW 2: DAILY RENTAL RATE CALCULATOR & DEPOSIT TRACKER
+         ======================================================== -->
+    <section id="calculator-view" class="app-view" aria-labelledby="calc-heading">
+      
+      <div class="section-header-banner">
+        <div>
+          <span class="stamp-tag">Transparent Pricing</span>
+          <h2 id="calc-heading" class="section-title">Rental Rate Calculator &amp; Deposit Tracker</h2>
+          <p class="section-desc">Review your selected sound gear, customize rental duration, toggle on-site technician, and inspect exact deposit breakdowns.</p>
+        </div>
+        <button type="button" class="btn btn-secondary" id="btn-back-to-catalog">
+          &larr; Add More Gear
+        </button>
+      </div>
+
+      <div class="calculator-layout-grid">
+        
+        <!-- Left Column: Itemized Rig Table -->
+        <div class="calculator-rig-col">
+          <div class="content-card">
+            <div class="card-header-row">
+              <h3 class="card-title">1. Selected Gear in Rental Rig</h3>
+              <button type="button" id="btn-clear-rig" class="btn-link text-danger">Clear All</button>
+            </div>
+
+            <!-- Accessible Table for Rented Gear -->
+            <div class="table-responsive">
+              <table id="rig-table" class="data-table">
+                <caption>Itemized Equipment List in Active Rig</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Equipment Item</th>
+                    <th scope="col">Daily Rate</th>
+                    <th scope="col">Qty</th>
+                    <th scope="col">Daily Total</th>
+                    <th scope="col">Security Deposit</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="rig-table-body">
+                  <!-- Injected via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Empty Rig Message -->
+            <div id="rig-empty-alert" class="rig-empty-alert">
+              <p>⚡ <strong>Your Rig is Empty!</strong> Please browse the <button type="button" class="btn-link inline-link" id="link-go-catalog">Sound Catalog</button> and click "Add to Rig" on speakers, mics, or mixers.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Event Duration, Technician Option & Quote Card -->
+        <div class="calculator-quote-col">
+          
+          <!-- Event Duration Selector -->
+          <div class="content-card duration-card">
+            <h3 class="card-title">2. Event Duration &amp; Discounts</h3>
+            
+            <fieldset class="form-fieldset duration-fieldset">
+              <legend class="form-legend">Select Rental Package Duration:</legend>
+              
+              <div class="duration-options-grid">
+                <label class="duration-option-label" for="duration-1day">
+                  <input type="radio" name="duration-plan" id="duration-1day" value="1" checked>
+                  <span class="duration-box">
+                    <span class="duration-title">1-Day Event</span>
+                    <span class="duration-tag">Standard (1× Rate)</span>
+                  </span>
+                </label>
+
+                <label class="duration-option-label" for="duration-3day">
+                  <input type="radio" name="duration-plan" id="duration-3day" value="3">
+                  <span class="duration-box">
+                    <span class="duration-title">3-Day Weekend</span>
+                    <span class="duration-badge-discount">15% OFF Base</span>
+                  </span>
+                </label>
+
+                <label class="duration-option-label" for="duration-custom">
+                  <input type="radio" name="duration-plan" id="duration-custom" value="custom">
+                  <span class="duration-box">
+                    <span class="duration-title">Custom Days</span>
+                    <span class="duration-tag">10% OFF if 3+ days</span>
+                  </span>
+                </label>
+              </div>
+
+              <!-- Custom Days Input (shown when Custom is selected) -->
+              <div id="custom-days-container" class="custom-days-wrapper hidden">
+                <label for="custom-days-input" class="form-label">Number of Event Days (1 to 14 days):</label>
+                <div class="custom-days-flex">
+                  <input type="number" id="custom-days-input" class="form-control" min="1" max="14" value="4">
+                  <span class="helper-text">Days</span>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- Sound Technician Toggle -->
+            <div class="technician-toggle-wrapper">
+              <label class="checkbox-label technician-label" for="technician-checkbox">
+                <input type="checkbox" id="technician-checkbox" class="form-checkbox">
+                <span class="checkbox-custom"></span>
+                <span class="technician-info">
+                  <strong>Add On-Site Sound Technician &amp; Live Mixer</strong>
+                  <span class="technician-rate">+ ₹1,500 / day (Includes sound check, cabling &amp; live console operation)</span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Live Financial Quote Card -->
+          <div class="content-card quote-summary-card">
+            <h3 class="card-title quote-header">3. Live Financial Quote</h3>
+            
+            <dl class="quote-dl">
+              <div class="quote-row">
+                <dt>Total Rig Items:</dt>
+                <dd><span id="quote-total-qty">0</span> units</dd>
+              </div>
+              <div class="quote-row">
+                <dt>Event Duration:</dt>
+                <dd><span id="quote-duration-display">1 Day</span></dd>
+              </div>
+              <div class="quote-row">
+                <dt>Base Daily Rig Total:</dt>
+                <dd>₹<span id="quote-daily-base">0</span></dd>
+              </div>
+              <div class="quote-row">
+                <dt>Gross Multi-Day Rental:</dt>
+                <dd>₹<span id="quote-gross-rental">0</span></dd>
+              </div>
+              <div class="quote-row discount-row">
+                <dt>Multi-Day Discount:</dt>
+                <dd class="discount-amount">- ₹<span id="quote-discount">0</span></dd>
+              </div>
+              <div class="quote-row">
+                <dt>Sound Technician Fee:</dt>
+                <dd>+ ₹<span id="quote-technician-fee">0</span></dd>
+              </div>
+              
+              <div class="quote-divider"></div>
+
+              <div class="quote-row highlight-net">
+                <dt>Net Equipment Rental:</dt>
+                <dd>₹<strong id="quote-net-rental">0</strong></dd>
+              </div>
+              <div class="quote-row highlight-deposit">
+                <dt>Refundable Security Deposit:</dt>
+                <dd class="deposit-amount">₹<strong id="quote-security-deposit">0</strong></dd>
+              </div>
+
+              <div class="quote-divider bold-divider"></div>
+
+              <div class="quote-row grand-total-row">
+                <dt>Grand Total Payable at Pickup:</dt>
+                <dd class="grand-total-amount">₹<span id="quote-grand-total">0</span></dd>
+              </div>
+            </dl>
+
+            <p class="quote-disclaimer">
+              * The Security Deposit is 100% refundable upon post-event gear return in intact condition.
+            </p>
+
+            <button type="button" id="btn-proceed-to-book" class="btn btn-primary btn-block btn-lg">
+              Proceed to Reserve Equipment &rarr;
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================================
+         VIEW 3: EQUIPMENT BOOKING FORM & CONFIRMATION
+         ======================================================== -->
+    <section id="booking-view" class="app-view" aria-labelledby="booking-heading">
+      
+      <div class="section-header-banner">
+        <div>
+          <span class="stamp-tag">Official Reservation</span>
+          <h2 id="booking-heading" class="section-title">Equipment Booking &amp; Gate-Pass Form</h2>
+          <p class="section-desc">Provide community organizer contact details, festival venue specifics, and dispatch address to lock your gear dates.</p>
+        </div>
+        <button type="button" class="btn btn-secondary" id="btn-back-to-calc">
+          &larr; Modify Rig or Quote
+        </button>
+      </div>
+
+      <div class="booking-layout-grid">
+        
+        <!-- Left: The HTML5 Form -->
+        <div class="booking-form-col">
+          <form id="booking-form" class="content-card booking-form" novalidate>
+            
+            <!-- Fieldset 1: Community Organizer & Contact -->
+            <fieldset class="form-fieldset">
+              <legend class="form-legend">Organizer &amp; Primary Contact</legend>
+              
+              <div class="form-group">
+                <label for="organizer-name" class="form-label">
+                  Organizer / Mandali / Band Name <span class="required-star">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  id="organizer-name" 
+                  name="organizerName" 
+                  class="form-control" 
+                  placeholder="e.g., Shri Ganesh Utsav Samiti, Band Swaralaya" 
+                  required 
+                  minlength="3"
+                >
+                <span class="field-error" id="error-organizer-name">Please enter the organizer name (at least 3 characters).</span>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col-half">
+                  <label for="contact-phone" class="form-label">
+                    10-Digit Mobile Number <span class="required-star">*</span>
+                  </label>
+                  <input 
+                    type="tel" 
+                    id="contact-phone" 
+                    name="contactPhone" 
+                    class="form-control" 
+                    placeholder="9876543210" 
+                    required 
+                    pattern="[6-9][0-9]{9}" 
+                    title="Enter a valid 10-digit Indian phone number starting with 6, 7, 8, or 9"
+                  >
+                  <span class="field-error" id="error-contact-phone">Must be a valid 10-digit Indian number starting with 6-9.</span>
+                </div>
+
+                <div class="form-group col-half">
+                  <label for="event-date" class="form-label">
+                    Event Start Date <span class="required-star">*</span>
+                  </label>
+                  <input 
+                    type="date" 
+                    id="event-date" 
+                    name="eventDate" 
+                    class="form-control" 
+                    required
+                  >
+                  <span class="field-error" id="error-event-date">Please choose an event date (today or future).</span>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- Fieldset 2: Venue & Logistics Details -->
+            <fieldset class="form-fieldset">
+              <legend class="form-legend">Venue Logistics &amp; Electrical Setup</legend>
+
+              <div class="form-row">
+                <div class="form-group col-half">
+                  <label for="venue-type" class="form-label">
+                    Venue Type <span class="required-star">*</span>
+                  </label>
+                  <select id="venue-type" name="venueType" class="form-control" required>
+                    <option value="">-- Choose Venue Type --</option>
+                    <option value="Temple / Pandal Ground">Temple / Pandal Ground (Open/Semi-covered)</option>
+                    <option value="Society Clubhouse / Hall">Society Clubhouse / AC Community Hall</option>
+                    <option value="Open Ground / Wedding Lawn">Open Ground / Wedding Lawn</option>
+                    <option value="Rooftop / Terrace Party">Rooftop / Terrace Party</option>
+                    <option value="School / College Auditorium">School / College Auditorium</option>
+                    <option value="Private Studio / Indoor Stage">Private Studio / Indoor Stage</option>
+                  </select>
+                  <span class="field-error" id="error-venue-type">Please select a venue type.</span>
+                </div>
+
+                <div class="form-group col-half">
+                  <label for="event-purpose" class="form-label">
+                    Festival / Event Purpose <span class="required-star">*</span>
+                  </label>
+                  <input 
+                    type="text" 
+                    id="event-purpose" 
+                    name="eventPurpose" 
+                    class="form-control" 
+                    placeholder="e.g., Ganesh Visarjan, Sangeet, Live Rock Gig" 
+                    required 
+                    minlength="3"
+                  >
+                  <span class="field-error" id="error-event-purpose">Please state the event purpose.</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="venue-address" class="form-label">
+                  Venue Address &amp; Power Source Notes <span class="required-star">*</span>
+                </label>
+                <textarea 
+                  id="venue-address" 
+                  name="venueAddress" 
+                  rows="3" 
+                  class="form-control" 
+                  placeholder="Provide street address, nearest landmark, and specify if 15A power socket or silent DG generator backup is available on-site..." 
+                  required 
+                  minlength="10"
+                ></textarea>
+                <span class="field-error" id="error-venue-address">Please provide at least 10 characters for address and power notes.</span>
+              </div>
+            </fieldset>
+
+            <!-- Fieldset 3: Terms Agreement -->
+            <fieldset class="form-fieldset">
+              <legend class="form-legend">Rental Agreement &amp; Damage Terms</legend>
+              <div class="terms-container">
+                <label class="checkbox-label" for="agree-terms">
+                  <input type="checkbox" id="agree-terms" name="agreeTerms" class="form-checkbox" required>
+                  <span class="checkbox-custom"></span>
+                  <span class="terms-text">
+                    I understand that all sound gear must be returned in intact, clean working condition. The refundable security deposit will be held until the post-event physical checklist is verified by the sound technician.
+                  </span>
+                </label>
+                <span class="field-error" id="error-agree-terms">You must agree to the equipment return terms before booking.</span>
+              </div>
+            </fieldset>
+
+            <!-- Form Action Buttons -->
+            <div class="form-actions-row">
+              <button type="submit" id="btn-submit-booking" class="btn btn-primary btn-lg">
+                ✅ Confirm Booking &amp; Reserve Gear
+              </button>
+              <button type="reset" id="btn-reset-booking" class="btn btn-outline">
+                Clear Form
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right: Real-Time Booking Summary Sidebar -->
+        <div class="booking-summary-col">
+          <aside class="content-card order-preview-card" aria-label="Booking Rig Preview">
+            <h3 class="card-title">Rig Reservation Summary</h3>
+            
+            <div class="rig-summary-preview">
+              <p class="summary-subtitle">Items in your dispatch list:</p>
+              <ul id="preview-items-list" class="preview-items-list">
+                <!-- Injected via JavaScript -->
+              </ul>
+            </div>
+
+            <div class="preview-totals-box">
+              <div class="preview-row">
+                <span>Duration:</span>
+                <strong id="preview-duration">1 Day</strong>
+              </div>
+              <div class="preview-row">
+                <span>Technician Assigned:</span>
+                <strong id="preview-tech">No</strong>
+              </div>
+              <div class="preview-row">
+                <span>Net Rental:</span>
+                <strong>₹<span id="preview-net">0</span></strong>
+              </div>
+              <div class="preview-row text-gold">
+                <span>Refundable Deposit:</span>
+                <strong>₹<span id="preview-deposit">0</span></strong>
+              </div>
+              <div class="preview-divider"></div>
+              <div class="preview-row total-highlight">
+                <span>Payable at Handover:</span>
+                <span>₹<strong id="preview-grand">0</strong></span>
+              </div>
+            </div>
+
+            <div class="info-callout">
+              <p>🪪 <strong>Gate Pass &amp; Inspection:</strong> Upon confirmation, you will receive a <strong>DHW-2026-XXXX</strong> booking ID. You can instantly print your handover voucher and inspect gear in Module 5.</p>
+            </div>
+          </aside>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================================
+         VIEW 4: ACTIVE BOOKINGS DASHBOARD
+         ======================================================== -->
+    <section id="dashboard-view" class="app-view" aria-labelledby="dashboard-heading">
+      
+      <div class="section-header-banner">
+        <div>
+          <span class="stamp-tag">Live Operations</span>
+          <h2 id="dashboard-heading" class="section-title">Active Bookings &amp; Rig Dispatches</h2>
+          <p class="section-desc">Track active community sound reservations, inspect refundable security deposit statuses, and restock cancelled rentals.</p>
+        </div>
+        <button type="button" class="btn btn-primary" id="btn-dashboard-new-booking">
+          + Book Another Rig
+        </button>
+      </div>
+
+      <!-- Operational KPI Stat Cards -->
+      <div class="stats-overview-grid">
+        <article class="stat-card">
+          <div class="stat-icon" aria-hidden="true">📋</div>
+          <div class="stat-data">
+            <span class="stat-label">Total Reservations</span>
+            <strong id="stat-total-bookings" class="stat-number">0</strong>
+          </div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-icon" aria-hidden="true">🚚</div>
+          <div class="stat-data">
+            <span class="stat-label">Active / Out on Gig</span>
+            <strong id="stat-active-gigs" class="stat-number text-crimson">0</strong>
+          </div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-icon" aria-hidden="true">🪙</div>
+          <div class="stat-data">
+            <span class="stat-label">Deposits Held in Escrow</span>
+            <strong class="stat-number text-marigold">₹<span id="stat-deposits-held">0</span></strong>
+          </div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-icon" aria-hidden="true">✅</div>
+          <div class="stat-data">
+            <span class="stat-label">Returned &amp; Settled</span>
+            <strong id="stat-settled-bookings" class="stat-number text-teal">0</strong>
+          </div>
+        </article>
+      </div>
+
+      <!-- Filter Bookings Bar -->
+      <div class="dashboard-filter-bar">
+        <div class="dashboard-filter-group">
+          <label for="filter-booking-status" class="filter-label">Filter by Status:</label>
+          <select id="filter-booking-status" class="form-control select-compact">
+            <option value="all">All Bookings</option>
+            <option value="Active / Out on Gig">Active / Out on Gig</option>
+            <option value="Pending Gear Inspection">Pending Gear Inspection</option>
+            <option value="Settled &amp; Refund Cleared">Settled &amp; Refund Cleared</option>
+            <option value="Deduction Applied">Deduction Applied</option>
+            <option value="Cancelled &amp; Restocked">Cancelled &amp; Restocked</option>
+          </select>
+        </div>
+
+        <div class="dashboard-search-group">
+          <label for="search-booking-input" class="filter-label">Search Booking:</label>
+          <input 
+            type="search" 
+            id="search-booking-input" 
+            class="form-control input-compact" 
+            placeholder="Search by ID, Organizer, Phone..."
+          >
+        </div>
+      </div>
+
+      <!-- Bookings Cards Container -->
+      <div id="bookings-cards-container" class="bookings-cards-grid" aria-live="polite">
+        <!-- Rendered via JavaScript -->
+      </div>
+
+      <!-- Empty state when no bookings exist -->
+      <div id="bookings-empty-state" class="empty-state hidden">
+        <p class="empty-icon">🎺</p>
+        <h3>No Bookings Recorded Yet</h3>
+        <p>No community sound bookings have been placed. Create your first booking from the catalog!</p>
+        <button type="button" class="btn btn-primary" id="btn-create-first-booking">Start New Booking</button>
+      </div>
+
+    </section>
+
+    <!-- ========================================================
+         VIEW 5: DISPUTE-FREE RETURN CHECKLIST & DEPOSIT SETTLEMENT
+         ======================================================== -->
+    <section id="return-view" class="app-view" aria-labelledby="return-heading">
+      
+      <div class="section-header-banner">
+        <div>
+          <span class="stamp-tag">Dispute Free Handover</span>
+          <h2 id="return-heading" class="section-title">Return Checklist &amp; Deposit Settlement</h2>
+          <p class="section-desc">Audit every speaker, microphone body, XLR snake, and spotlight before and after the event to calculate fair deposit refunds with zero disputes.</p>
+        </div>
+        <button type="button" class="btn btn-primary" id="btn-print-checklist">
+          🖨️ Print / Export Voucher
+        </button>
+      </div>
+
+      <!-- Booking Selector Bar -->
+      <div class="content-card return-selector-card">
+        <div class="selector-row">
+          <label for="return-booking-select" class="selector-label">
+            <strong>Select Active Booking to Inspect:</strong>
+          </label>
+          <select id="return-booking-select" class="form-control select-wide">
+            <option value="">-- Choose a Booking from Dashboard --</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Inspection Details & Checklist Container -->
+      <div id="return-details-container" class="return-details-container hidden">
+        
+        <!-- Booking Meta Card (Printable) -->
+        <div class="content-card printable-meta-card">
+          <div class="meta-header-row">
+            <div>
+              <span class="voucher-id-stamp" id="return-voucher-id">DHW-2026-0001</span>
+              <h3 id="return-organizer-display" class="meta-organizer">Shri Ganesh Utsav Samiti</h3>
+              <p class="meta-sub">
+                <span id="return-phone-display">📱 9876543210</span> | 
+                <span id="return-venue-display">🏛️ Temple Pandal Ground</span> | 
+                <span id="return-date-display">📅 2026-11-28</span>
+              </p>
+            </div>
+            <div class="meta-status-stamp">
+              <span class="stamp-badge" id="return-current-status-badge">Held on Booking</span>
+            </div>
+          </div>
+          <div class="meta-address-box">
+            <strong>Venue &amp; Power Dispatch Notes:</strong>
+            <p id="return-address-display">Near Main Pandal Gate, 15A socket tested.</p>
+          </div>
+        </div>
+
+        <!-- Checklist Table Card -->
+        <div class="content-card return-table-card">
+          <div class="card-header-row">
+            <h3 class="card-title">Itemized Gear Handover &amp; Return Audit</h3>
+            <span class="table-legend-badge">Check off items during pickup &amp; return</span>
+          </div>
+
+          <div class="table-responsive">
+            <table id="checklist-table" class="data-table checklist-table">
+              <caption>Pre-Event Handover &amp; Post-Event Return Verification Checklist</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Gear Item &amp; Specs</th>
+                  <th scope="col" class="text-center">Pickup Verified</th>
+                  <th scope="col" class="text-center">Return Verified</th>
+                  <th scope="col">Physical Return Condition</th>
+                  <th scope="col">Deposit Allocated</th>
+                  <th scope="col">Deduction</th>
+                </tr>
+              </thead>
+              <tbody id="checklist-table-body">
+                <!-- Dynamically populated via app.js -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Inspector & Notes Box -->
+          <div class="inspector-notes-grid">
+            <div class="inspector-col">
+              <label for="inspector-technician-name" class="form-label">
+                Technician / Sound Inspector Name:
+              </label>
+              <input 
+                type="text" 
+                id="inspector-technician-name" 
+                class="form-control" 
+                placeholder="e.g., Rajesh Sharma (Chief Sound Engineer)"
+              >
+            </div>
+            <div class="notes-col">
+              <label for="inspector-remarks" class="form-label">
+                Post-Event Inspection Remarks &amp; Cable Tally:
+              </label>
+              <textarea 
+                id="inspector-remarks" 
+                rows="2" 
+                class="form-control" 
+                placeholder="Note any missing mic clips, dented speaker grilles, or clean handover confirmation..."
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settlement Summary & Action Card -->
+        <div class="content-card settlement-card">
+          <div class="settlement-grid">
+            <div class="settlement-breakdown">
+              <h3 class="card-title">Security Deposit Refund Settlement</h3>
+              <p class="settlement-rule-desc">
+                <strong>Standard Rules:</strong> Intact = ₹0 deduction. Minor Wear / Scratches = 20% deduction. Damaged or Missing = 100% item deposit forfeit.
+              </p>
+
+              <dl class="settlement-dl">
+                <div class="settlement-row">
+                  <dt>Original Deposit Held:</dt>
+                  <dd>₹<strong id="settle-original-deposit">0</strong></dd>
+                </div>
+                <div class="settlement-row text-danger">
+                  <dt>Total Damage / Loss Deduction:</dt>
+                  <dd>- ₹<strong id="settle-total-deduction">0</strong></dd>
+                </div>
+                <div class="settlement-divider"></div>
+                <div class="settlement-row text-success refund-row">
+                  <dt>Net Security Deposit to Refund:</dt>
+                  <dd class="refund-highlight">₹<strong id="settle-net-refund">0</strong></dd>
+                </div>
+              </dl>
+            </div>
+
+            <!-- Settlement Actions & Finalize -->
+            <div class="settlement-action-box">
+              <h4 class="action-box-title">Finalize Settlement Status:</h4>
+              <p class="action-box-desc">Saving this audit updates the booking dashboard and generates the official settlement clearance note.</p>
+              
+              <div class="settlement-btns">
+                <button type="button" id="btn-save-settlement" class="btn btn-primary btn-block">
+                  💾 Finalize Settlement &amp; Save Audit
+                </button>
+                <button type="button" id="btn-print-voucher" class="btn btn-secondary btn-block">
+                  🖨️ Print Handover Voucher
+                </button>
+              </div>
+
+              <!-- Settlement Status Stamp -->
+              <div class="settlement-status-flag" id="settlement-status-flag">
+                Status: <strong id="settlement-status-text">Pending Inspection</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- No Booking Selected Fallback -->
+      <div id="return-no-selection" class="empty-state">
+        <p class="empty-icon">📋</p>
+        <h3>No Booking Selected</h3>
+        <p>Please select an active booking from the dropdown above to audit equipment and settle the security deposit.</p>
+      </div>
+
+    </section>
+
+    <!-- ========================================================
+         VIVA HELPER & COMMUNITY FAQ ACCORDION (details / summary)
+         ======================================================== -->
+    <section class="faq-section" aria-labelledby="faq-heading">
+      <div class="content-card">
+        <h2 id="faq-heading" class="card-title">Rental Terms, Equipment Guidelines &amp; Viva Reference</h2>
+        
+        <details class="faq-item">
+          <summary class="faq-summary">
+            <strong>How is the Refundable Security Deposit calculated and refunded?</strong>
+          </summary>
+          <div class="faq-content">
+            <p>Every equipment item has a predetermined refundable security deposit (e.g., ₹4,000 for a 1200W Dual Top PA speaker, ₹1,500 for a dual wireless mic set). The total deposit is collected at equipment pickup. Upon return, the sound technician verifies the gear condition on the Return Checklist. If all items are intact, 100% of the deposit is refunded on the spot. For minor wear, 20% is deducted; for damaged or missing gear, 100% of the allocated item deposit is forfeited.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-summary">
+            <strong>What multi-day discounts are applied automatically?</strong>
+          </summary>
+          <div class="faq-content">
+            <p>1-Day events are billed at standard daily rates. 3-Day Weekend Festivals receive an automatic 15% discount on the base rental. Custom duration events of 3 days or longer receive an automatic 10% discount on base equipment rental.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-summary">
+            <strong>What electrical precautions are required for high-wattage PA speakers?</strong>
+          </summary>
+          <div class="faq-content">
+            <p>High-wattage PA amplifiers require a dedicated 15-Ampere single-phase power socket with clean earthing (grounding) or a stabilized diesel generator (DG) set. Never plug heavy subwoofers into daisy-chained domestic 5A multi-plugs.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-summary">
+            <strong>First-Semester Viva Quick Explain: How is data persisted?</strong>
+          </summary>
+          <div class="faq-content">
+            <p>All catalog stock, selected rental rig items, and confirmed booking records are stored in the browser's <code>localStorage</code> API using <code>JSON.stringify()</code> and retrieved using <code>JSON.parse()</code>. When you refresh the page or close the browser, your bookings and custom rigs remain intact with zero backend server dependencies!</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================
+       FOOTER
+       ========================================== -->
+  <footer class="site-footer">
+    <div class="toran-border-footer" aria-hidden="true"></div>
+    <div class="container footer-inner">
+      <div class="footer-col">
+        <h3 class="footer-title">DhwaniStage Rentals</h3>
+        <p class="footer-text">Community Event Sound, Stage Spotlights &amp; DJ Gear System. Designed for festivals, mandalis, marriages, and cultural gatherings.</p>
+        <p class="footer-badge">Pure HTML5 • CSS3 • Vanilla JavaScript (No Frameworks)</p>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Sound Engineering Hub</h4>
+        <address class="footer-address">
+          DhwaniStage Sound Yard &amp; Warehouse<br>
+          Near Shivaji Chowk, SV Road, Andheri West<br>
+          Mumbai, Maharashtra 400058, India<br>
+          Helpline: <a href="tel:+919876543210">+91 98765 43210</a><br>
+          Email: <a href="mailto:support@dhwanistage.local">support@dhwanistage.local</a>
+        </address>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Project Submission &amp; Viva</h4>
+        <p class="footer-text">
+          Course: First Semester Web Development (CA1 Project)<br>
+          System: DhwaniStage Equipment Rental System<br>
+          Persistence: Browser <code>localStorage</code><br>
+          <time datetime="2026-11-26">Academic Year: 2026–2027</time>
+        </p>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <div class="container footer-bottom-flex">
+        <p>&copy; 2026 DhwaniStage. All rights reserved. Indian Maximalist Theme inspired by Daachis &amp; Hallucia.</p>
+        <button type="button" id="btn-scroll-top" class="btn-link text-gold" title="Scroll to top of page">
+          Back to Top &uarr;
+        </button>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
